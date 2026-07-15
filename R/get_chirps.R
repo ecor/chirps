@@ -19,7 +19,8 @@
 #' \code{\link[terra]{SpatRaster}}
 #' @param as.matrix logical, returns an object of class \code{matrix}
 #' @param dataset_version dataset version (character/string) . See default. 
-#' @param dataset_type dataset type (character/string) , only dirst elemet is considered. See default and \url{https://data.chc.ucsb.edu/products/CHIRPS/v3.0/daily/final/readme.txt}.
+#' @param dataset_type dataset type (character/string) , only first elemet is considered. See default and \url{https://data.chc.ucsb.edu/products/CHIRPS/v3.0/daily/final/readme.txt}.
+#' @param temp_dir temporary directory
 #' @param ... additional arguments passed to \code{\link[terra]{terra}}
 #' or \code{\link[sf]{sf}} methods
 #' See details
@@ -57,6 +58,9 @@
 #'   \item{lat}{the latitude as provided in \code{object}}
 #'   \item{chirps}{the \acronym{CHIRPS} value in mm}
 #' }
+#' 
+#' @importFrom curl curl_download
+#' 
 #' @references
 #'
 #' Funk C. et al. (2015). Scientific Data, 2, 150066.
@@ -128,12 +132,12 @@ get_chirps = function(object, dates,server,dataset_version="2.0",dataset_type=c(
 #' @rdname get_chirps
 #' @export
 get_chirps.default = function(object, dates, server,dataset_version="2.0",dataset_type=c("rnl","sat"),
-                               as.matrix = FALSE,...) {
+                               as.matrix = FALSE,temp_dir=tempdir(),...) {
   
   
   if (isTRUE(grepl("Spat", class(object)))) {
     
-   r = get_chirps.SpatVector(object, dates, ...)
+   r = get_chirps.SpatVector(object, dates,temp_dir=temp_dir, ...)
    return(r)
     
   }
@@ -210,7 +214,7 @@ get_chirps.default = function(object, dates, server,dataset_version="2.0",datase
     span = length(days)
     
     # get CHIRPS CoG files
-    rr = .get_CHIRPS_tiles_CHC(dates, dataset_version=dataset_version,dataset_type=dataset_type,...)
+    rr = .get_CHIRPS_tiles_CHC(dates, dataset_version=dataset_version,dataset_type=dataset_type,temp_dir=temp_dir,...)
     
     if (isTRUE(as.raster)) {
       result = terra::crop(rr, y = object)
@@ -258,13 +262,13 @@ get_chirps.SpatVector = function(object,
                                   dates,
                                   server = "CHC",
                                  dataset_version="2.0",dataset_type=c("rnl","sat"),
-                                  as.raster = TRUE,
+                                  as.raster = TRUE,temp_dir=tempdir(),
                                   ...) {
   dots = list(...)
   as.matrix = dots[["as.matrix"]]
   
   # get CHIRTS GeoTiff files
-  rr = .get_CHIRPS_tiles_CHC(dates, dataset_version=dataset_version,dataset_type=dataset_type,...)
+  rr = .get_CHIRPS_tiles_CHC(dates, dataset_version=dataset_version,dataset_type=dataset_type,temp_dir=temp_dir,...)
   
   if (isTRUE(as.raster)) {
     result = terra::crop(rr, y = object)
@@ -325,7 +329,7 @@ get_chirps.SpatExtent = function(object, dates, server = "CHC",dataset_version="
 #' @method get_chirps sf
 #' @export
 get_chirps.sf = function(object, dates, server,
-                          dataset_version="2.0",dataset_type=c("rnl","sat"),as.sf = FALSE,
+                          dataset_version="2.0",dataset_type=c("rnl","sat"),as.sf = FALSE,temp_dir=tempdir(),
                           ...) {
   # check geometry type
   type = c("POINT", "POLYGON")
@@ -426,7 +430,7 @@ get_chirps.sf = function(object, dates, server,
     span = length(days)
     
     # get CHIRPS CoG files
-    rr = .get_CHIRPS_tiles_CHC(dates, dataset_version=dataset_version,dataset_type=dataset_type,...)
+    rr = .get_CHIRPS_tiles_CHC(dates, dataset_version=dataset_version,dataset_type=dataset_type,temp_dir=temp_dir,...)
     
     result = terra::extract(rr, y = lonlat, ...)
     result$ID = NULL
@@ -473,7 +477,7 @@ get_chirps.geojson = function(object,
                                dates,
                                server,
                                dataset_version="2.0",dataset_type=c("rnl","sat"),
-                               as.geojson = FALSE,
+                               as.geojson = FALSE,temp_dir=tempdir(),
                                ...) {
   dots = list(...)
   
@@ -575,7 +579,7 @@ get_chirps.geojson = function(object,
     span = length(days)
     
     # get CHIRPS CoG files
-    rr = .get_CHIRPS_tiles_CHC(dates, dataset_version=dataset_version,dataset_type=dataset_type,...)
+    rr = .get_CHIRPS_tiles_CHC(dates, dataset_version=dataset_version,dataset_type=dataset_type,temp_dir=temp_dir,...)
     
     result = terra::extract(rr, y = lonlat, ...)
     result$ID = NULL
@@ -625,10 +629,10 @@ get_chirps.SpatExtent = function(object,
                                   dates,
                                   server = "CHC",
                                   dataset_version="2.0",dataset_type=c("rnl","sat"),
-                                  as.raster = TRUE,
+                                  as.raster = TRUE,temp_dir=tempdir(),
                                   ...) {
   # get CHIRTS GeoTiff files
-  rr = .get_CHIRPS_tiles_CHC(dates, dataset_version=dataset_version,dataset_type=dataset_type,...)
+  rr = .get_CHIRPS_tiles_CHC(dates, dataset_version=dataset_version,dataset_type=dataset_type,temp_dir=temp_dir,...)
   
   result = terra::crop(rr, y = object)
   
@@ -647,7 +651,7 @@ get_chirps.SpatExtent = function(object,
                                   coverage = "global",
                                   interval = "daily",
                                   format = "cogs",dataset_version,
-                                  dataset_type=c("rnl","sat"),verbose=FALSE,   ##dataset_version="2.0",dataset_type=c("rnl","sat"),dataset_type=c("rnl","sat")
+                                  dataset_type=c("rnl","sat"),verbose=FALSE,temp_dir,  ##dataset_version="2.0",dataset_type=c("rnl","sat"),dataset_type=c("rnl","sat")
                                   ...) {
   message("\nFetching data as GeoTIFF files from CHC server \n")
   dataset_type=dataset_type[1]
@@ -655,7 +659,8 @@ get_chirps.SpatExtent = function(object,
   if (is.integer(dataset_version)) dataset_version==paste0(dataset_version,".0")
   
   if (dataset_version=="3.0") {
-  "https://data.chc.ucsb.edu/products/CHIRPS/v3.0/daily/final/readme.txt" |> readLines() |> writeLines()
+    message("V3.0")
+ ## "https://data.chc.ucsb.edu/products/CHIRPS/v3.0/daily/final/readme.txt" |> readLines() |> writeLines()
   }
   # setup file names
   .validate_dates(dates)
@@ -702,13 +707,52 @@ get_chirps.SpatExtent = function(object,
     ###print(years)
     u <- "https://data.chc.ucsb.edu/products/CHIRPS/v%s/daily/final/%s/%04d/chirps-v%s.%s.%s.tif" |> 
       sprintf(dataset_version,dataset_type,as.numeric(years),dataset_version,dataset_type,dates)
-    
+    ## uncomment for debugging  
+    #print(u)
+    #uu <<- u
+    u <- file.path(u)
+  }
+  tmptif <- paste(temp_dir,basename(u),sep="/")
+  ###
+  # u1 <- u
+  # tmp <- tempfile(fileext = ".tif")
+  # 
+  # curl::curl_download(u1, tmp, mode = "wb")
+  # if (verbose) message(u1)
+  # r <- terra::rast(tmp)
+  # terra::time(r) <- as.Date(seqdate)
+  ###
+  h <- curl::new_handle(
+    useragent = "Mozilla/5.0",
+    followlocation = TRUE
+  )
+  
+  con <- curl::curl(u, handle = h)
+  
+  for (ii in 1:length(u)) {
+    curl_download(url=u[ii],destfile=tmptif[ii],quiet=verbose,handle=h)
   }
   
+  tmp <- tmptif
+  # raw <- tryCatch(
+  #   readBin(con, what = "raw", n = 1e8),
+  #   error = function(e) stop("CHC did not return a TIFF: ", u)
+  # )
+  # 
+  # tmp <- tempfile(fileext = ".tif")
+  # writeBin(raw, tmp) ## insert download Here 
   
-  u1 = file.path("/vsicurl", u)
-  if (verbose) message(u1)
-  r = terra::rast(u1)
-  terra::time(r) <- as.Date(seqdate) ## add Ec (ecor) 20260125
+  r <- tryCatch(
+    terra::rast(tmp),
+    error = function(e) stop("terra could not read the downloaded file: ", u)
+  )
+  
+  terra::time(r) <- as.Date(seqdate)
+  
+  ###
+  # u1 = file.path("/vsicurl", u)
+  # if (verbose) message(u1)
+  # r = terra::rast(u1)
+  # terra::time(r) <- as.Date(seqdate) ## add Ec (ecor) 20260125
   return(r)
 }

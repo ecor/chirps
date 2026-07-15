@@ -67,7 +67,7 @@ The IMERG dataset provides near-real time global observations of rainfall at
 \bold{nQuadSegs}: integer, number of segments per buffer quadrant
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 lonlat <- data.frame(lon = c(-55.0281,-54.9857),
                      lat = c(-2.8094, -2.8756))
 

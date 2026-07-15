@@ -26,6 +26,7 @@ get_chirps(
   dataset_version = "2.0",
   dataset_type = c("rnl", "sat"),
   as.matrix = FALSE,
+  temp_dir = tempdir(),
   ...
 )
 
@@ -36,6 +37,7 @@ get_chirps(
   dataset_version = "2.0",
   dataset_type = c("rnl", "sat"),
   as.raster = TRUE,
+  temp_dir = tempdir(),
   ...
 )
 
@@ -57,6 +59,7 @@ get_chirps(
   dataset_version = "2.0",
   dataset_type = c("rnl", "sat"),
   as.raster = TRUE,
+  temp_dir = tempdir(),
   ...
 )
 
@@ -67,6 +70,7 @@ get_chirps(
   dataset_version = "2.0",
   dataset_type = c("rnl", "sat"),
   as.sf = FALSE,
+  temp_dir = tempdir(),
   ...
 )
 
@@ -77,6 +81,7 @@ get_chirps(
   dataset_version = "2.0",
   dataset_type = c("rnl", "sat"),
   as.geojson = FALSE,
+  temp_dir = tempdir(),
   ...
 )
 
@@ -87,6 +92,7 @@ get_chirps(
   dataset_version = "2.0",
   dataset_type = c("rnl", "sat"),
   as.raster = TRUE,
+  temp_dir = tempdir(),
   ...
 )
 }
@@ -104,13 +110,15 @@ any other object that can be coerced to \code{data.frame}),
 
 \item{dataset_version}{dataset version (character/string) . See default.}
 
-\item{dataset_type}{dataset type (character/string) , only dirst elemet is considered. See default and \url{https://data.chc.ucsb.edu/products/CHIRPS/v3.0/daily/final/readme.txt}.}
+\item{dataset_type}{dataset type (character/string) , only first elemet is considered. See default and \url{https://data.chc.ucsb.edu/products/CHIRPS/v3.0/daily/final/readme.txt}.}
 
 \item{...}{additional arguments passed to \code{\link[terra]{terra}}
 or \code{\link[sf]{sf}} methods
 See details}
 
 \item{as.matrix}{logical, returns an object of class \code{matrix}}
+
+\item{temp_dir}{temporary directory}
 
 \item{as.raster}{logical, returns an object of class
 \code{\link[terra]{SpatRaster}}}

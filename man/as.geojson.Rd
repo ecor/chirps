@@ -31,7 +31,7 @@ Take single points from geographical coordinates and coerce into a geojson of
  geometry 'Polygon'
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 # Default S3 Method
 # random geographic points within bbox(10, 12, 45, 47)
 library("sf")

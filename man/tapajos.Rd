@@ -14,7 +14,7 @@ The data was provided by the Chico Mendes Institute for Biodiversity
 Conservation (ICMBio) via \url{https://www.protectedplanet.net/en}
 }
 \usage{
-tapajos
+data(tapajos)
 }
 \description{
 Geometries for the Tapajós National Forest, a protected 

@@ -1,7 +1,7 @@
 Type: Package
 Package: chirps
 Title: API Client for CHIRPS and CHIRTS
-Version: 1.1
+Version: 1.1.1
 Authors@R: c(
     person("Kauê", "de Sousa", , "desousa.kaue@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-7571-7845")),
@@ -39,7 +39,7 @@ Imports:
     jsonlite,
     sf,
     stats,
-    terra (>= 1.2-10)
+    terra (>= 1.2-10),curl
 Suggests:
     climatrends,
     knitr,
@@ -51,4 +51,4 @@ VignetteBuilder:
 Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-GB
-RoxygenNote: 7.3.2
+Config/roxygen2/version: 8.0.0
