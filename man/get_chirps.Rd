@@ -10,15 +10,9 @@
 \alias{get_chirps.geojson}
 \title{Get CHIRPS precipitation data}
 \usage{
-get_chirps(
-  object,
-  dates,
-  server,
-  dataset_version = "2.0",
-  dataset_type = c("rnl", "sat"),
-  ...
-)
+get_chirps(object, dates, server, ...)
 
+<<<<<<< HEAD
 \method{get_chirps}{default}(
   object,
   dates,
@@ -40,18 +34,22 @@ get_chirps(
   temp_dir = tempdir(),
   ...
 )
+=======
+\method{get_chirps}{default}(object, dates, server, as.matrix = FALSE, ...)
+
+\method{get_chirps}{SpatVector}(object, dates, server = "CHC", as.raster = TRUE, ...)
+>>>>>>> 4c4dc3caffae43e7bdfb12f7523a9170a92e2cea
 
 \method{get_chirps}{SpatRaster}(
   object,
   dates,
   server = "CHC",
-  dataset_version = "2.0",
-  dataset_type = c("rnl", "sat"),
   as.matrix = TRUE,
-  as.raster = TRUE,
+  as.raster = FALSE,
   ...
 )
 
+<<<<<<< HEAD
 \method{get_chirps}{SpatExtent}(
   object,
   dates,
@@ -95,6 +93,15 @@ get_chirps(
   temp_dir = tempdir(),
   ...
 )
+=======
+\method{get_chirps}{SpatExtent}(object, dates, server = "CHC", as.raster = TRUE, ...)
+
+\method{get_chirps}{sf}(object, dates, server, as.sf = FALSE, ...)
+
+\method{get_chirps}{geojson}(object, dates, server, as.geojson = FALSE, ...)
+
+\method{get_chirps}{SpatExtent}(object, dates, server = "CHC", as.raster = TRUE, ...)
+>>>>>>> 4c4dc3caffae43e7bdfb12f7523a9170a92e2cea
 }
 \arguments{
 \item{object}{input, an object of class \code{\link[base]{data.frame}} (or
@@ -108,10 +115,13 @@ any other object that can be coerced to \code{data.frame}),
 \item{server}{a character that represents the server source "CHC" or
 "ClimateSERV"}
 
+<<<<<<< HEAD
 \item{dataset_version}{dataset version (character/string) . See default.}
 
 \item{dataset_type}{dataset type (character/string) , only first elemet is considered. See default and \url{https://data.chc.ucsb.edu/products/CHIRPS/v3.0/daily/final/readme.txt}.}
 
+=======
+>>>>>>> 4c4dc3caffae43e7bdfb12f7523a9170a92e2cea
 \item{...}{additional arguments passed to \code{\link[terra]{terra}}
 or \code{\link[sf]{sf}} methods
 See details}
@@ -172,10 +182,9 @@ Data description at
 \code{get_chirps()} may return some warning messages given by
 \code{\link[sf]{sf}}, please look \CRANpkg{sf} documentation for possible
 issues.
-
-### examplesIf interactive()
 }
 \examples{
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library("chirps")
 library("terra")
 
@@ -206,22 +215,9 @@ r5 = get_chirps(lonlat, dates, server = "ClimateSERV")
 # Case 6: from "ClimateSERV" and return as a matrix
 r6 = get_chirps(lonlat, dates, server = "ClimateSERV", as.matrix = TRUE)
 
-# Case 7 (4b): input SpatExtent and return a raster within the extent (CHIRPS dataset version 3.0)
-area = ext(c(-66, -64, -6, -4))
-
-dates = c("2017-12-15", "2017-12-31")
-
-r7 = r4b <- get_chirps(area, dates, server = "CHC",dataset_version="3.0")
-
-r8 = r4c <- get_chirps(area, dates, server = "CHC",dataset_version="3.0",dataset_type="sat")
-
-
-
+\dontshow{\}) # examplesIf}
 }
 \references{
 Funk C. et al. (2015). Scientific Data, 2, 150066.
  \cr\doi{10.1038/sdata.2015.66}
- 
-Climate Hazards Center Infrared Precipitation with Stations version 3. CHIRPS3 Data Repository \url{https://doi.org/10.15780/G2JQ0P} (2025). Data was accessed on 2026 01 28. 
-\url{https://www.chc.ucsb.edu/data/chirps3},\cr\doi{10.15780/G2JQ0P}
 }
